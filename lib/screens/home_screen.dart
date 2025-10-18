@@ -1,5 +1,6 @@
 import 'package:calculator/buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,6 +38,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   bool isOperator(String x) {
     return ['AC', '%', 'DEL', '/', 'x', '-', '+'].contains(x);
+  }
+
+  void evaluateExp() {
+    String finalQuestion = userQuestion;
+    finalQuestion = finalQuestion.replaceAll('x', '*');
+    ExpressionParser p = GrammarParser();
+    Expression exp = p.parse(finalQuestion);
+    var context = ContextModel();
+    var evaluator = RealEvaluator(context);
+    num eval = evaluator.evaluate(exp);
+    userAnswer = eval.toString();
   }
 
   @override
@@ -85,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisCount: 4,
                 ),
                 itemBuilder: (BuildContext context, int index) {
+                  //Clear Button
                   if (index == 0) {
                     return CButton(
                       color: Color.fromARGB(255, 27, 27, 27),
@@ -95,6 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         });
                       },
                     );
+                    //Delete Button
                   } else if (index == 2) {
                     return CButton(
                       color: Color.fromARGB(255, 27, 27, 27),
@@ -108,20 +122,30 @@ class _HomeScreenState extends State<HomeScreen> {
                         });
                       },
                     );
+                    //Equals-to Button
+                  } else if (index == 19) {
+                    return CButton(
+                      color: Colors.deepOrange,
+                      buttonText: buttons[index],
+                      buttonTapped: () {
+                        setState(() {
+                          evaluateExp();
+                        });
+                      },
+                    );
+                  } else {
+                    return CButton(
+                      color: isOperator(buttons[index])
+                          ? const Color.fromARGB(255, 27, 27, 27)
+                          : const Color.fromARGB(255, 75, 75, 75),
+                      buttonText: buttons[index],
+                      buttonTapped: () {
+                        setState(() {
+                          userQuestion += buttons[index];
+                        });
+                      },
+                    );
                   }
-                  return CButton(
-                    color: buttons[index] == '='
-                        ? Colors.deepOrange
-                        : isOperator(buttons[index])
-                        ? const Color.fromARGB(255, 27, 27, 27)
-                        : const Color.fromARGB(255, 75, 75, 75),
-                    buttonText: buttons[index],
-                    buttonTapped: () {
-                      setState(() {
-                        userQuestion += buttons[index];
-                      });
-                    },
-                  );
                 },
               ),
             ),
