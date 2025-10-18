@@ -9,6 +9,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var userQuestion = '';
+  var userAnswer = '';
+
   final List<String> buttons = [
     'AC',
     '%',
@@ -35,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isOperator(String x) {
     return ['AC', '%', 'DEL', '/', 'x', '-', '+'].contains(x);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,30 +52,77 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Expanded(
             flex: 2,
-            child: Container(decoration: BoxDecoration(color: Colors.black)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    userQuestion,
+                    style: TextStyle(color: Colors.white, fontSize: 48),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    userAnswer,
+                    style: TextStyle(color: Colors.grey, fontSize: 24),
+                  ),
+                ),
+              ],
+            ),
           ),
           Expanded(
             flex: 5,
-            child: Container(
-              decoration: BoxDecoration(color: Colors.black),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: GridView.builder(
-                  itemCount: buttons.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    return CButton(
-                      color: buttons[index] == '='
-                          ? Colors.deepOrange
-                          : isOperator(buttons[index])
-                              ? const Color.fromARGB(255, 27, 27, 27)
-                              : const Color.fromARGB(255, 75, 75, 75),
-                      buttonText: buttons[index],
-                    );
-                  },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: GridView.builder(
+                itemCount: buttons.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
                 ),
+                itemBuilder: (BuildContext context, int index) {
+                  if (index == 0) {
+                    return CButton(
+                      color: Color.fromARGB(255, 27, 27, 27),
+                      buttonText: buttons[index],
+                      buttonTapped: () {
+                        setState(() {
+                          userQuestion = '';
+                        });
+                      },
+                    );
+                  } else if (index == 2) {
+                    return CButton(
+                      color: Color.fromARGB(255, 27, 27, 27),
+                      buttonText: buttons[index],
+                      buttonTapped: () {
+                        setState(() {
+                          userQuestion = userQuestion.substring(
+                            0,
+                            userQuestion.length - 1,
+                          );
+                        });
+                      },
+                    );
+                  }
+                  return CButton(
+                    color: buttons[index] == '='
+                        ? Colors.deepOrange
+                        : isOperator(buttons[index])
+                        ? const Color.fromARGB(255, 27, 27, 27)
+                        : const Color.fromARGB(255, 75, 75, 75),
+                    buttonText: buttons[index],
+                    buttonTapped: () {
+                      setState(() {
+                        userQuestion += buttons[index];
+                      });
+                    },
+                  );
+                },
               ),
             ),
           ),
