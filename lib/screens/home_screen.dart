@@ -12,6 +12,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   var userQuestion = '';
   var userAnswer = '';
+  final List<String> operators = ['+', '-', 'x', '/', '%'];
 
   final List<String> buttons = [
     'AC',
@@ -105,6 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       buttonTapped: () {
                         setState(() {
                           userQuestion = '';
+                          userAnswer = '';
                         });
                       },
                     );
@@ -115,10 +117,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       buttonText: buttons[index],
                       buttonTapped: () {
                         setState(() {
-                          userQuestion = userQuestion.substring(
-                            0,
-                            userQuestion.length - 1,
-                          );
+                          setState(() {
+                            if (userQuestion.isNotEmpty) {
+                              userQuestion = userQuestion.substring(
+                                0,
+                                userQuestion.length - 1,
+                              );
+                            }
+                          });
                         });
                       },
                     );
@@ -140,6 +146,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           : const Color.fromARGB(255, 75, 75, 75),
                       buttonText: buttons[index],
                       buttonTapped: () {
+                        String lastChar = userQuestion.isNotEmpty
+                            ? userQuestion[userQuestion.length - 1]
+                            : '';
+
+                        if (userQuestion.isEmpty &&
+                            isOperator(buttons[index])) {
+                          return;
+                        }
+
+                        if (isOperator(buttons[index]) &&
+                            operators.contains(lastChar)) {
+                          return;
+                        }
+
                         setState(() {
                           userQuestion += buttons[index];
                         });
