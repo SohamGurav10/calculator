@@ -12,6 +12,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   var userQuestion = '';
   var userAnswer = '';
+  double questionFontSize = 48;
+  double answerFontSize = 24;
+
+  Color questionColor = Colors.white;
+  Color answerColor = Colors.grey;
+
+  bool isResultShown = false; // Tracks if = was pressed
+
   final List<String> operators = ['+', '-', 'x', '/', '%'];
 
   final List<String> buttons = [
@@ -41,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return ['AC', '%', 'DEL', '/', 'x', '-', '+'].contains(x);
   }
 
-  void evaluateExp() {
+  void evaluateExp({bool isEqualsPressed = false}) {
     if (userQuestion.isEmpty) {
       userAnswer = '';
       return;
@@ -56,6 +64,21 @@ class _HomeScreenState extends State<HomeScreen> {
       var evaluator = RealEvaluator(context);
       num eval = evaluator.evaluate(exp);
       userAnswer = eval.toString();
+      if (isEqualsPressed) {
+        // Swap font sizes
+        questionFontSize = 24;
+        answerFontSize = 48;
+        questionColor = Colors.grey;
+        answerColor = Colors.white;
+        isResultShown = true;
+      } else {
+        // Keep normal live evaluation sizes
+        questionFontSize = 48;
+        answerFontSize = 24;
+        questionColor = Colors.white;
+        answerColor = Colors.grey;
+        isResultShown = false;
+      }
     } catch (e) {
       userAnswer = '';
     }
@@ -83,7 +106,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   alignment: Alignment.centerRight,
                   child: Text(
                     userQuestion,
-                    style: TextStyle(color: Colors.white, fontSize: 48),
+                    style: TextStyle(
+                      color: questionColor,
+                      fontSize: questionFontSize,
+                    ),
                   ),
                 ),
                 Container(
@@ -91,7 +117,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   alignment: Alignment.centerRight,
                   child: Text(
                     userAnswer,
-                    style: TextStyle(color: Colors.grey, fontSize: 24),
+                    style: TextStyle(
+                      color: answerColor,
+                      fontSize: answerFontSize,
+                    ),
                   ),
                 ),
               ],
@@ -126,14 +155,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Color.fromARGB(255, 27, 27, 27),
                       buttonText: buttons[index],
                       buttonTapped: () {
-                          setState(() {
-                            if (userQuestion.isNotEmpty) {
-                              userQuestion = userQuestion.substring(
-                                0,
-                                userQuestion.length - 1,
-                              );
-                            }
-                          });
+                        setState(() {
+                          if (userQuestion.isNotEmpty) {
+                            userQuestion = userQuestion.substring(
+                              0,
+                              userQuestion.length - 1,
+                            );
+                          }
+                        });
                       },
                     );
 
@@ -144,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       buttonText: buttons[index],
                       buttonTapped: () {
                         setState(() {
-                          evaluateExp();
+                          evaluateExp(isEqualsPressed: true);
                         });
                       },
                     );
@@ -171,7 +200,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         setState(() {
                           userQuestion += buttons[index];
-                          evaluateExp();
+                          evaluateExp(); // live evaluation
+                          // Reset sizes in case a result was previously shown
+                          questionFontSize = 48;
+                          answerFontSize = 24;
+                          questionColor = Colors.white;
+                          answerColor = Colors.grey;
+                          isResultShown = false;
                         });
                       },
                     );
