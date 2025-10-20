@@ -42,14 +42,23 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void evaluateExp() {
-    String finalQuestion = userQuestion;
-    finalQuestion = finalQuestion.replaceAll('x', '*');
-    ExpressionParser p = GrammarParser();
-    Expression exp = p.parse(finalQuestion);
-    var context = ContextModel();
-    var evaluator = RealEvaluator(context);
-    num eval = evaluator.evaluate(exp);
-    userAnswer = eval.toString();
+    if (userQuestion.isEmpty) {
+      userAnswer = '';
+      return;
+    }
+
+    try {
+      String finalQuestion = userQuestion;
+      finalQuestion = finalQuestion.replaceAll('x', '*');
+      ExpressionParser p = GrammarParser();
+      Expression exp = p.parse(finalQuestion);
+      var context = ContextModel();
+      var evaluator = RealEvaluator(context);
+      num eval = evaluator.evaluate(exp);
+      userAnswer = eval.toString();
+    } catch (e) {
+      userAnswer = '';
+    }
   }
 
   @override
@@ -58,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text("Calculator", style: TextStyle(color: Colors.grey)),
+        title: const Text("Calculator", style: TextStyle(color: Colors.grey)),
       ),
 
       body: Column(
@@ -110,13 +119,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         });
                       },
                     );
+
                     //Delete Button
                   } else if (index == 2) {
                     return CButton(
                       color: Color.fromARGB(255, 27, 27, 27),
                       buttonText: buttons[index],
                       buttonTapped: () {
-                        setState(() {
                           setState(() {
                             if (userQuestion.isNotEmpty) {
                               userQuestion = userQuestion.substring(
@@ -125,9 +134,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             }
                           });
-                        });
                       },
                     );
+
                     //Equals-to Button
                   } else if (index == 19) {
                     return CButton(
@@ -162,6 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         setState(() {
                           userQuestion += buttons[index];
+                          evaluateExp();
                         });
                       },
                     );
