@@ -7,7 +7,7 @@ Supports **basic arithmetic operations** with **live expression evaluation**, **
 
 ## Features Implemented
 
-### ✅ Core Features
+### Core Features
 - **Basic arithmetic operations:** `+`, `-`, `x`, `/`, `%`.
 - **Clear and delete buttons:** Easily reset input or delete the last character.
 - **Operator validation:** Prevents consecutive operators and invalid input at the start.
@@ -17,13 +17,13 @@ Supports **basic arithmetic operations** with **live expression evaluation**, **
 
 ---
 
-### 📦 Dependencies
+### Dependencies
 - [**math_expressions**](https://pub.dev/packages/math_expressions)  
   Parses and evaluates mathematical expressions safely.
 
 ---
 
-### 🖥 UI Design
+### UI Design
 - **Dark theme** with grey and deep orange accents.
 - Input expression displayed at the top with a larger font.
 - Live evaluation displayed below the input expression.
@@ -31,7 +31,7 @@ Supports **basic arithmetic operations** with **live expression evaluation**, **
 
 ---
 
-### 🔧 How to Run
+### How to Run
 1. Clone the repository:
 ```bash
 git clone git@github.com:<your-username>/calculator.git
