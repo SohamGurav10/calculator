@@ -104,23 +104,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   alignment: Alignment.centerRight,
-                  child: Text(
-                    userQuestion,
+                  child: AnimatedDefaultTextStyle(
                     style: TextStyle(
                       color: questionColor,
                       fontSize: questionFontSize,
+                    ),
+                    curve: Curves.easeInOut,
+                    duration: Duration(milliseconds: 250),
+                    child: Text(
+                      userQuestion,
                     ),
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   alignment: Alignment.centerRight,
-                  child: Text(
-                    userAnswer,
+                  child: AnimatedDefaultTextStyle(
                     style: TextStyle(
                       color: answerColor,
                       fontSize: answerFontSize,
                     ),
+                    curve: Curves.easeInOut,
+                    duration: Duration(milliseconds: 250),
+                    child: Text(userAnswer),
                   ),
                 ),
               ],
